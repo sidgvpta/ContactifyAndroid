@@ -10,7 +10,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class ListAdapter extends ArrayAdapter<SMSData> {
@@ -33,7 +32,7 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
         View rowView = inflater.inflate(R.layout.activity_messages, parent, false);
 
         TextView senderNumber = (TextView) rowView.findViewById(R.id.smsNumberText);
-        senderNumber.setText(smsList.get(position).getNumber());
+        senderNumber.setText(smsList.get(position).getBody());
 
         return rowView;
     }
