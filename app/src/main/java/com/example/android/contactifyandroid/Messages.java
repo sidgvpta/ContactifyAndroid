@@ -9,44 +9,52 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class Messages extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+import android.app.ListActivity;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
+
+public class Messages extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        List<SMSData> smsList = new ArrayList<SMSData>();
+
+        Uri uri = Uri.parse("content://sms/inbox");
+        Cursor c= getContentResolver().query(uri, null, null ,null,null);
+        startManagingCursor(c);
+
+        // Read the sms data and store it in the list
+        if(c.moveToFirst()) {
+            for(int i=0; i < c.getCount(); i++) {
+                SMSData sms = new SMSData();
+                sms.setBody(c.getString(c.getColumnIndexOrThrow("body")).toString());
+                sms.setNumber(c.getString(c.getColumnIndexOrThrow("address")).toString());
+                smsList.add(sms);
+
+                c.moveToNext();
             }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_messages, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
+        c.close();
 
-        return super.onOptionsItemSelected(item);
+        // Set smsList in the ListAdapter
+        setListAdapter(new ListAdapter(this, smsList));
+
     }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        SMSData sms = (SMSData)getListAdapter().getItem(position);
+
+        Toast.makeText(getApplicationContext(), sms.getBody(), Toast.LENGTH_LONG).show();
+
+    }
+
 }
