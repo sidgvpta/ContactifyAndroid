@@ -34,14 +34,17 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
         TextView senderNumber = (TextView) rowView.findViewById(R.id.smsNumberText);
         //senderNumber.setText(smsList.get(position).getBody());
 
+        //initialize fields
         TextView senderMessage = (TextView) rowView.findViewById(R.id.smsBodyText);
         senderNumber.setText("");
         senderMessage.setText("");
 
+        //read each inbox message and print to TextView
         for(int i = 0; i < smsList.size(); i++) {
             String currentNumberList, currentBodyList, addNumber, addBody, newNumberList, newBodyList;
             SMSData catcher;
 
+            //Retrieve current list of numbers from TextView...
             if(senderNumber.getText() != null) {
                 currentNumberList = (senderNumber.getText()).toString();
                 currentNumberList += "\n\n";
@@ -50,6 +53,7 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
                 currentNumberList = "";
             }
 
+            //Retrieve current list of messages from TextView...
             if(senderMessage.getText() != null) {
                 currentBodyList = (senderMessage.getText()).toString();
                 currentBodyList += "\n\n";
@@ -58,14 +62,18 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
                 currentBodyList = "";
             }
 
+            //retrieve a single message from the list of stored inbox messages
             catcher = smsList.get(i);
 
+            //parse message
             addNumber = catcher.getNumber();
             addBody = catcher.getBody();
 
+            //append new message (number and text) to string containing printed messages
             newNumberList = currentNumberList + addNumber;
             newBodyList = currentBodyList + addBody;
 
+            //refresh printed list
             senderNumber.setText(newNumberList);
             senderMessage.setText(newBodyList);
         }
