@@ -4,13 +4,17 @@ package com.example.android.contactifyandroid;
  * Created by sidgupta on 12/10/2016.
  */
 
+import android.telephony.SmsManager;
 import android.widget.ArrayAdapter;
 import java.util.List;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ListAdapter extends ArrayAdapter<SMSData> {
 
@@ -78,7 +82,26 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
             senderMessage.setText(newBodyList);
         }
 
+        Button sendText = (Button) rowView.findViewById(R.id.sendButton);
+        final EditText inputNumber = (EditText) rowView.findViewById(R.id.enterNumber);
+        final EditText inputMessage = (EditText) rowView.findViewById(R.id.enterMessage);
+
+        sendText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if(inputNumber.getText() != null && inputMessage.getText() != null) {
+                    String outboundNumber = inputNumber.getText().toString();
+                    String outboundMessage = inputMessage.getText().toString();
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(outboundNumber, null, outboundMessage, null, null);
+                }
+                else {
+                    Toast.makeText(getContext(), "Please complete necessary fields", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         return rowView;
     }
-
 }

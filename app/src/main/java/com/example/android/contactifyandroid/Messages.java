@@ -15,9 +15,12 @@ import java.util.List;
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.net.Uri;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.telephony.SmsManager;
 
 public class Messages extends ListActivity {
 
