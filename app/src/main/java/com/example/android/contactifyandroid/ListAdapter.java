@@ -32,7 +32,43 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
         View rowView = inflater.inflate(R.layout.activity_messages, parent, false);
 
         TextView senderNumber = (TextView) rowView.findViewById(R.id.smsNumberText);
-        senderNumber.setText(smsList.get(position).getBody());
+        //senderNumber.setText(smsList.get(position).getBody());
+
+        TextView senderMessage = (TextView) rowView.findViewById(R.id.smsBodyText);
+        senderNumber.setText("");
+        senderMessage.setText("");
+
+        for(int i = 0; i < smsList.size(); i++) {
+            String currentNumberList, currentBodyList, addNumber, addBody, newNumberList, newBodyList;
+            SMSData catcher;
+
+            if(senderNumber.getText() != null) {
+                currentNumberList = (senderNumber.getText()).toString();
+                currentNumberList += "\n\n";
+            }
+            else {
+                currentNumberList = "";
+            }
+
+            if(senderMessage.getText() != null) {
+                currentBodyList = (senderMessage.getText()).toString();
+                currentBodyList += "\n\n";
+            }
+            else {
+                currentBodyList = "";
+            }
+
+            catcher = smsList.get(i);
+
+            addNumber = catcher.getNumber();
+            addBody = catcher.getBody();
+
+            newNumberList = currentNumberList + addNumber;
+            newBodyList = currentBodyList + addBody;
+
+            senderNumber.setText(newNumberList);
+            senderMessage.setText(newBodyList);
+        }
 
         return rowView;
     }

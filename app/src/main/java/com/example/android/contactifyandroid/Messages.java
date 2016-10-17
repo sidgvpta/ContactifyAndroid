@@ -46,7 +46,6 @@ public class Messages extends ListActivity {
         }
         */
 
-
         List<SMSData> smsList = new ArrayList<SMSData>();
 
         Uri uri = Uri.parse("content://sms/inbox");
@@ -60,7 +59,6 @@ public class Messages extends ListActivity {
                 sms.setBody(c.getString(c.getColumnIndexOrThrow("body")).toString());
                 sms.setNumber(c.getString(c.getColumnIndexOrThrow("address")).toString());
                 smsList.add(sms);
-
                 c.moveToNext();
             }
         }
@@ -68,7 +66,6 @@ public class Messages extends ListActivity {
 
         // Set smsList in the ListAdapter
         setListAdapter(new ListAdapter(this, smsList));
-
     }
 
     @Override
@@ -76,7 +73,5 @@ public class Messages extends ListActivity {
         SMSData sms = (SMSData)getListAdapter().getItem(position);
 
         Toast.makeText(getApplicationContext(), sms.getBody(), Toast.LENGTH_LONG).show();
-
     }
-
 }
