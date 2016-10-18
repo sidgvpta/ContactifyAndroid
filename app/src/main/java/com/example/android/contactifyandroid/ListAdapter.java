@@ -21,7 +21,7 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
     // List context
     private final Context context;
     // List values
-    private final List<SMSData> smsList;
+    private List<SMSData> smsList;
 
     public ListAdapter(Context context, List<SMSData> smsList) {
         super(context, R.layout.activity_messages, smsList);
@@ -43,65 +43,42 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
         senderNumber.setText("");
         senderMessage.setText("");
 
-        //read each inbox message and print to TextView
-        for(int i = 0; i < smsList.size(); i++) {
-            String currentNumberList, currentBodyList, addNumber, addBody, newNumberList, newBodyList;
-            SMSData catcher;
-
-            //Retrieve current list of numbers from TextView...
-            if(senderNumber.getText() != null) {
-                currentNumberList = (senderNumber.getText()).toString();
-                currentNumberList += "\n\n";
-            }
-            else {
-                currentNumberList = "";
-            }
-
-            //Retrieve current list of messages from TextView...
-            if(senderMessage.getText() != null) {
-                currentBodyList = (senderMessage.getText()).toString();
-                currentBodyList += "\n\n";
-            }
-            else {
-                currentBodyList = "";
-            }
-
-            //retrieve a single message from the list of stored inbox messages
-            catcher = smsList.get(i);
-
-            //parse message
-            addNumber = catcher.getNumber();
-            addBody = catcher.getBody();
-
-            //append new message (number and text) to string containing printed messages
-            newNumberList = currentNumberList + addNumber;
-            newBodyList = currentBodyList + addBody;
-
-            //refresh printed list
-            senderNumber.setText(newNumberList);
-            senderMessage.setText(newBodyList);
-        }
+        Messages messages = new Messages();
+        smsList = messages.populateInbox(smsList, senderNumber, senderMessage);
 
         Button sendText = (Button) rowView.findViewById(R.id.sendButton);
-        final EditText inputNumber = (EditText) rowView.findViewById(R.id.enterNumber);
-        final EditText inputMessage = (EditText) rowView.findViewById(R.id.enterMessage);
+        EditText inputNumber = (EditText) rowView.findViewById(R.id.enterNumber);
+        EditText inputMessage = (EditText) rowView.findViewById(R.id.enterMessage);
+
+        sendText(sendText, inputNumber, inputMessage);
+
+        return rowView;
+    }
+
+    public void sendText(Button sendText, EditText inputNumber, EditText inputMessage) {
+
+        final EditText inputNumber_local = inputNumber;
+        final EditText inputMessage_local = inputMessage;
 
         sendText.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                if(inputNumber.getText() != null && inputMessage.getText() != null) {
-                    String outboundNumber = inputNumber.getText().toString();
-                    String outboundMessage = inputMessage.getText().toString();
+                if(inputNumber_local.getText() != null && inputMessage_local.getText() != null) {
+                    String outboundNumber = inputNumber_local.getText().toString();
+                    String outboundMessage = inputMessage_local.getText().toString();
+                    Toast.makeText(getContext(), "Sending your message...", Toast.LENGTH_SHORT).show();
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(outboundNumber, null, outboundMessage, null, null);
+
+                    //clear the text fields
+                    inputNumber_local.setHint("Enter recipient's number");
+                    inputMessage_local.setHint("Enter your message here...");
                 }
                 else {
                     Toast.makeText(getContext(), "Please complete necessary fields", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-        return rowView;
     }
 }

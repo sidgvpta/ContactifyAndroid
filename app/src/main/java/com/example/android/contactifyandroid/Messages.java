@@ -77,4 +77,47 @@ public class Messages extends ListActivity {
 
         Toast.makeText(getApplicationContext(), sms.getBody(), Toast.LENGTH_LONG).show();
     }
+
+    public List<SMSData> populateInbox(List<SMSData> smsList, TextView senderNumber, TextView senderMessage) {
+
+        //read each inbox message and print to TextView
+        for(int i = 0; i < smsList.size(); i++) {
+            String currentNumberList, currentBodyList, addNumber, addBody, newNumberList, newBodyList;
+            SMSData catcher;
+
+            //Retrieve current list of numbers from TextView...
+            if(senderNumber.getText() != null) {
+                currentNumberList = (senderNumber.getText()).toString();
+                currentNumberList += "\n\n";
+            }
+            else {
+                currentNumberList = "";
+            }
+
+            //Retrieve current list of messages from TextView...
+            if(senderMessage.getText() != null) {
+                currentBodyList = (senderMessage.getText()).toString();
+                currentBodyList += "\n\n";
+            }
+            else {
+                currentBodyList = "";
+            }
+
+            //retrieve a single message from the list of stored inbox messages
+            catcher = smsList.get(i);
+
+            //parse message
+            addNumber = catcher.getNumber();
+            addBody = catcher.getBody();
+
+            //append new message (number and text) to string containing printed messages
+            newNumberList = currentNumberList + addNumber;
+            newBodyList = currentBodyList + addBody;
+
+            //refresh printed list
+            senderNumber.setText(newNumberList);
+            senderMessage.setText(newBodyList);
+        }
+        return smsList;
+    }
 }
