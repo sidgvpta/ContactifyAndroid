@@ -4,7 +4,7 @@ package com.example.android.contactifyandroid;
  * Created by sidgupta on 12/10/2016.
  */
 public class SMSData {
-    // Number from witch the sms was send
+    // Number from which the sms was sent
     private String number;
     // SMS text body
     private String body;
