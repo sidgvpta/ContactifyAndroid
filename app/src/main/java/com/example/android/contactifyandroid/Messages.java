@@ -85,9 +85,8 @@ public class Messages extends AppCompatActivity {
         TextView senderMessage = (TextView) findViewById(R.id.smsBodyText);
         senderNumber.setText("");
         senderMessage.setText("");
-
-        Messages messages = new Messages();
-        smsList = messages.populateInbox(smsList, senderNumber, senderMessage);
+        
+        smsList = populateInbox(smsList, senderNumber, senderMessage);
 
         Button sendText = (Button) findViewById(R.id.sendButton);
         EditText inputNumber = (EditText) findViewById(R.id.enterNumber);
