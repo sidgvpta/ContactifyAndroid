@@ -1,8 +1,12 @@
 package com.example.android.contactifyandroid;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -50,6 +54,37 @@ public class Messages extends ListActivity {
         */
 
         List<SMSData> smsList = new ArrayList<SMSData>();
+
+        //PERMISSIONS
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_SMS)) {
+
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+                final int MY_PERMISSIONS_REQUEST_READ_SMS = 0;
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_SMS},
+                        MY_PERMISSIONS_REQUEST_READ_SMS);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
 
         Uri uri = Uri.parse("content://sms/inbox");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
