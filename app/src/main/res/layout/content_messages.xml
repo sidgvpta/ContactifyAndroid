@@ -30,24 +30,27 @@
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/smsNumberText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NUMBER_GOES_HERE"/>
+        <TextView
+            android:id="@+id/smsNumberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NUMBER_GOES_HERE"/>
 
-    <TextView
-        android:layout_toRightOf="@id/smsNumberText"
-        android:id="@+id/smsBodyText"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:text="NUMBER_GOES_HERE"/>
-    </LinearLayout>
+        <TextView
+            android:layout_toRightOf="@id/smsNumberText"
+            android:id="@+id/smsBodyText"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:text="NUMBER_GOES_HERE"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

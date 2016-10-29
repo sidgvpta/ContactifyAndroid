@@ -26,39 +26,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.telephony.SmsManager;
 
-public class Messages extends ListActivity {
+public class Messages extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*
-        //This code is an alternate way of reading SMS messages
-        //messages are written to the verbose log for confirmation of correct functionality
-
-        Cursor cursor = getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
-
-        if (cursor.moveToFirst()) { // must check the result to prevent exception
-            do {
-                String msgData = "";
-                for(int idx=0;idx<cursor.getColumnCount();idx++)
-                {
-                    msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
-                }
-                // use msgData
-                Log.v("TAG", msgData); //for testing purposes
-            } while (cursor.moveToNext());
-        } else {
-            // empty box, no SMS
-        }
-        */
+        setContentView(R.layout.activity_messages);
 
         List<SMSData> smsList = new ArrayList<SMSData>();
 
         //PERMISSIONS
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
 
-        // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -67,7 +46,7 @@ public class Messages extends ListActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_SMS)) {
 
-                // Show an expanation to the user *asynchronously* -- don't block
+                // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
 
@@ -85,7 +64,6 @@ public class Messages extends ListActivity {
             }
         }
 
-
         Uri uri = Uri.parse("content://sms/inbox");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
         startManagingCursor(c);
@@ -102,15 +80,20 @@ public class Messages extends ListActivity {
         }
         c.close();
 
-        // Set smsList in the ListAdapter
-        setListAdapter(new ListAdapter(this, smsList));
-    }
+        //initialize fields
+        TextView senderNumber = (TextView) findViewById(R.id.smsNumberText);
+        TextView senderMessage = (TextView) findViewById(R.id.smsBodyText);
+        senderNumber.setText("");
+        senderMessage.setText("");
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        SMSData sms = (SMSData)getListAdapter().getItem(position);
+        Messages messages = new Messages();
+        smsList = messages.populateInbox(smsList, senderNumber, senderMessage);
 
-        Toast.makeText(getApplicationContext(), sms.getBody(), Toast.LENGTH_LONG).show();
+        Button sendText = (Button) findViewById(R.id.sendButton);
+        EditText inputNumber = (EditText) findViewById(R.id.enterNumber);
+        EditText inputMessage = (EditText) findViewById(R.id.enterMessage);
+
+        sendText(sendText, inputNumber, inputMessage);
     }
 
     public List<SMSData> populateInbox(List<SMSData> smsList, TextView senderNumber, TextView senderMessage) {
@@ -154,5 +137,62 @@ public class Messages extends ListActivity {
             senderMessage.setText(newBodyList);
         }
         return smsList;
+    }
+
+    public void sendText(Button sendText, EditText inputNumber, EditText inputMessage) {
+
+        final EditText inputNumber_local = inputNumber;
+        final EditText inputMessage_local = inputMessage;
+
+        //PERMISSIONS
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.SEND_SMS)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+                final int MY_PERMISSIONS_REQUEST_READ_SMS = 0;
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSIONS_REQUEST_READ_SMS);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
+        sendText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if(inputNumber_local.getText() != null && inputMessage_local.getText() != null) {
+                    String outboundNumber = inputNumber_local.getText().toString();
+                    String outboundMessage = inputMessage_local.getText().toString();
+                    Toast.makeText(Messages.this, "Sending your message...", Toast.LENGTH_SHORT).show();
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(outboundNumber, null, outboundMessage, null, null);
+
+                    //clear the text fields
+                    inputNumber_local.setHint("Enter recipient's number");
+                    inputMessage_local.setHint("Enter your message here...");
+                }
+                else {
+                    Toast.makeText(Messages.this, "Please complete necessary fields", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
