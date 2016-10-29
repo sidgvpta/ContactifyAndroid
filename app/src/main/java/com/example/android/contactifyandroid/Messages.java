@@ -2,6 +2,7 @@ package com.example.android.contactifyandroid;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
@@ -23,6 +25,7 @@ import android.net.Uri;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -30,6 +33,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.telephony.SmsManager;
+import android.support.v7.widget.CardView;
 
 import org.w3c.dom.Text;
 
@@ -108,11 +112,38 @@ public class Messages extends AppCompatActivity {
 
         //read each inbox message and print to TextView
         for(int i = 0; i < smsList.size(); i++) {
-            String currentNumberList, currentBodyList, addNumber, addBody, newNumberList, newBodyList;
+            String addNumber, addBody;
             SMSData catcher;
             TextView newSMSnumber = new TextView(this);
-            newSMSnumber.setGravity(Gravity.CENTER);
+            //newSMSnumber.setGravity(Gravity.CENTER);
             TextView newSMSbody = new TextView(this);
+            LinearLayout cardViewFormat = new LinearLayout(this);
+            cardViewFormat.setOrientation(LinearLayout.VERTICAL);
+
+
+            CardView newSMS = new CardView(this);
+
+            newSMS.setUseCompatPadding(true);
+            newSMS.setPreventCornerOverlap(false);
+
+            /*
+            CardView.LayoutParams params = new CardView.LayoutParams(
+                    CardView.LayoutParams.MATCH_PARENT,
+                    CardView.LayoutParams.WRAP_CONTENT
+            );
+
+            Resources r = this.getResources();
+            int px = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    40,
+                    r.getDisplayMetrics()
+            );
+
+            params.bottomMargin = px;
+
+            newSMS.setLayoutParams(params);
+            newSMS.setPadding(px, px, px, px);
+            */
 
             //retrieve a single message from the list of stored inbox messages
             catcher = smsList.get(i);
@@ -123,9 +154,12 @@ public class Messages extends AppCompatActivity {
 
             newSMSnumber.setText(addNumber);
             newSMSbody.setText(addBody);
+            cardViewFormat.addView(newSMSnumber);
+            cardViewFormat.addView(newSMSbody);
 
-            messageBlock.addView(newSMSnumber, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            messageBlock.addView(newSMSbody, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            newSMS.addView(cardViewFormat);
+
+            messageBlock.addView(newSMS, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         return smsList;
     }
