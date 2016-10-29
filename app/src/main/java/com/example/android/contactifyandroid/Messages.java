@@ -3,6 +3,7 @@ package com.example.android.contactifyandroid;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -120,9 +121,7 @@ public class Messages extends AppCompatActivity {
             LinearLayout cardViewFormat = new LinearLayout(this);
             cardViewFormat.setOrientation(LinearLayout.VERTICAL);
 
-
             CardView newSMS = new CardView(this);
-
             newSMS.setUseCompatPadding(true);
             newSMS.setPreventCornerOverlap(false);
 
@@ -153,6 +152,7 @@ public class Messages extends AppCompatActivity {
             addBody = catcher.getBody();
 
             newSMSnumber.setText(addNumber);
+            newSMSnumber.setTypeface(Typeface.DEFAULT_BOLD);
             newSMSbody.setText(addBody);
             cardViewFormat.addView(newSMSnumber);
             cardViewFormat.addView(newSMSbody);
