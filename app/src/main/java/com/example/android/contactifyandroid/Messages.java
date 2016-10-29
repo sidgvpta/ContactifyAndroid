@@ -47,35 +47,7 @@ public class Messages extends AppCompatActivity {
 
         List<SMSData> smsList = new ArrayList<SMSData>();
 
-        //PERMISSIONS
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_SMS)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-                final int MY_PERMISSIONS_REQUEST_READ_SMS = 0;
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_SMS},
-                        MY_PERMISSIONS_REQUEST_READ_SMS);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-
+        checkPermissions(Manifest.permission.READ_SMS);
         Uri uri = Uri.parse("content://sms/inbox");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
         startManagingCursor(c);
@@ -169,36 +141,7 @@ public class Messages extends AppCompatActivity {
         final EditText inputNumber_local = inputNumber;
         final EditText inputMessage_local = inputMessage;
 
-        //PERMISSIONS
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
-
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.SEND_SMS)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-                final int MY_PERMISSIONS_REQUEST_READ_SMS = 0;
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.SEND_SMS},
-                        MY_PERMISSIONS_REQUEST_READ_SMS);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-
+        checkPermissions(Manifest.permission.SEND_SMS);
         sendText.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -219,5 +162,36 @@ public class Messages extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void checkPermissions(String permissionType) {
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
+
+        if (ContextCompat.checkSelfPermission(this,
+                permissionType)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    permissionType)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+                final int MY_PERMISSIONS_REQUEST_READ_SMS = 0;
+                ActivityCompat.requestPermissions(this,
+                        new String[]{permissionType},
+                        MY_PERMISSIONS_REQUEST_READ_SMS);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
     }
 }
