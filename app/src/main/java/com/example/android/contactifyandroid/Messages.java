@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +20,18 @@ import java.util.List;
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.net.Uri;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.telephony.SmsManager;
+
+import org.w3c.dom.Text;
 
 public class Messages extends AppCompatActivity {
 
@@ -85,7 +92,7 @@ public class Messages extends AppCompatActivity {
         TextView senderMessage = (TextView) findViewById(R.id.smsBodyText);
         senderNumber.setText("");
         senderMessage.setText("");
-        
+
         smsList = populateInbox(smsList, senderNumber, senderMessage);
 
         Button sendText = (Button) findViewById(R.id.sendButton);
@@ -97,28 +104,15 @@ public class Messages extends AppCompatActivity {
 
     public List<SMSData> populateInbox(List<SMSData> smsList, TextView senderNumber, TextView senderMessage) {
 
+        LinearLayout messageBlock = (LinearLayout) findViewById(R.id.messageBlock);
+
         //read each inbox message and print to TextView
         for(int i = 0; i < smsList.size(); i++) {
             String currentNumberList, currentBodyList, addNumber, addBody, newNumberList, newBodyList;
             SMSData catcher;
-
-            //Retrieve current list of numbers from TextView...
-            if(senderNumber.getText() != null) {
-                currentNumberList = (senderNumber.getText()).toString();
-                currentNumberList += "\n\n";
-            }
-            else {
-                currentNumberList = "";
-            }
-
-            //Retrieve current list of messages from TextView...
-            if(senderMessage.getText() != null) {
-                currentBodyList = (senderMessage.getText()).toString();
-                currentBodyList += "\n\n";
-            }
-            else {
-                currentBodyList = "";
-            }
+            TextView newSMSnumber = new TextView(this);
+            newSMSnumber.setGravity(Gravity.CENTER);
+            TextView newSMSbody = new TextView(this);
 
             //retrieve a single message from the list of stored inbox messages
             catcher = smsList.get(i);
@@ -127,13 +121,11 @@ public class Messages extends AppCompatActivity {
             addNumber = catcher.getNumber();
             addBody = catcher.getBody();
 
-            //append new message (number and text) to string containing printed messages
-            newNumberList = currentNumberList + addNumber;
-            newBodyList = currentBodyList + addBody;
+            newSMSnumber.setText(addNumber);
+            newSMSbody.setText(addBody);
 
-            //refresh printed list
-            senderNumber.setText(newNumberList);
-            senderMessage.setText(newBodyList);
+            messageBlock.addView(newSMSnumber, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            messageBlock.addView(newSMSbody, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         return smsList;
     }
