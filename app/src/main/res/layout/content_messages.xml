@@ -40,20 +40,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/smsNumberText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="NUMBER_GOES_HERE"/>
-
-            <TextView
-                android:id="@+id/smsBodyText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="BODY_GOES_HERE"/>
-
         </LinearLayout>
 
     </ScrollView>

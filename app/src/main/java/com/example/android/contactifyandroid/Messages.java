@@ -40,13 +40,23 @@ import org.w3c.dom.Text;
 
 public class Messages extends AppCompatActivity {
 
+    List<SMSData> smsList = new ArrayList<SMSData>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
-        List<SMSData> smsList = new ArrayList<SMSData>();
+        readMessages();
+        populateInbox();
 
+        Button sendText = (Button) findViewById(R.id.sendButton);
+        EditText inputNumber = (EditText) findViewById(R.id.enterNumber);
+        EditText inputMessage = (EditText) findViewById(R.id.enterMessage);
+        sendText(sendText, inputNumber, inputMessage);
+    }
+
+    public void readMessages(){
         checkPermissions(Manifest.permission.READ_SMS);
         Uri uri = Uri.parse("content://sms/inbox");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
@@ -63,23 +73,9 @@ public class Messages extends AppCompatActivity {
             }
         }
         c.close();
-
-        //initialize fields
-        TextView senderNumber = (TextView) findViewById(R.id.smsNumberText);
-        TextView senderMessage = (TextView) findViewById(R.id.smsBodyText);
-        senderNumber.setText("");
-        senderMessage.setText("");
-
-        smsList = populateInbox(smsList, senderNumber, senderMessage);
-
-        Button sendText = (Button) findViewById(R.id.sendButton);
-        EditText inputNumber = (EditText) findViewById(R.id.enterNumber);
-        EditText inputMessage = (EditText) findViewById(R.id.enterMessage);
-
-        sendText(sendText, inputNumber, inputMessage);
     }
 
-    public List<SMSData> populateInbox(List<SMSData> smsList, TextView senderNumber, TextView senderMessage) {
+    public void populateInbox() {
 
         LinearLayout messageBlock = (LinearLayout) findViewById(R.id.messageBlock);
 
@@ -88,11 +84,9 @@ public class Messages extends AppCompatActivity {
             String addNumber, addBody;
             SMSData catcher;
             TextView newSMSnumber = new TextView(this);
-            //newSMSnumber.setGravity(Gravity.CENTER);
             TextView newSMSbody = new TextView(this);
             LinearLayout cardViewFormat = new LinearLayout(this);
             cardViewFormat.setOrientation(LinearLayout.VERTICAL);
-
             CardView newSMS = new CardView(this);
             newSMS.setUseCompatPadding(true);
             newSMS.setPreventCornerOverlap(false);
@@ -128,12 +122,10 @@ public class Messages extends AppCompatActivity {
             newSMSbody.setText(addBody);
             cardViewFormat.addView(newSMSnumber);
             cardViewFormat.addView(newSMSbody);
-
             newSMS.addView(cardViewFormat);
 
             messageBlock.addView(newSMS, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-        return smsList;
     }
 
     public void sendText(Button sendText, EditText inputNumber, EditText inputMessage) {
